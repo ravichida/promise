@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Large Images</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+    <style>
+        /* Use below media queries to set CSS for blow screen widths */
+        @media screen and (max-width: 1020px) {}
+
+        @media screen and (max-width: 780px) {}
+
+        @media screen and (max-width: 480px) {}
+
+        .bootstrap-table {
+            padding-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <h3 class="text-center">Ajax Promise Example</h3>
+    <!-- <h3 class="text-center">Ajax Promise Example - Bootstrap Responsive Table</h3> -->
+    <div class="container pt-2">
+        <div class="row">
+            <div class="col-sm-3 p-2 text-center">
+                <button type="submit" class="btn btn-primary getImages" onclick="getJSON('posts')">Posts</button>
+            </div>
+            <div class="col-sm-3 p-2 text-center">
+                <button type="submit" class="btn btn-primary getImages" onclick="getJSON('comments')">Comments</button>
+            </div>
+            <div class="col-sm-3 p-2 text-center">
+                <button type="submit" class="btn btn-primary getImages" onclick="getJSON('todos')">todos</button>
+            </div>
+            <div class="col-sm-3 p-2 text-center">
+                <button type="submit" class="btn btn-primary getImages" onclick="getJSON('users')">users</button>
+            </div>
+        </div>
+        <div class="row mt2">
+            <div class="col">
+                <div class="table-responsive" id="datatable">
+                    <table class="table" id="table" data-height="460">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <p id="errmsg"></p>
+    </div>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#imagesCarousel').carousel({ interval: 1000 });
+            var tdata;
+        });
+    </script>
+    <script>
+        $(function () {
+            $(window).resize(function () {
+                $(".carousel-image").height(0.8 * $(window).height());
+            });
+        });
+    </script>
+    <script>
+        function getJSON(resource) {
+            const promise = new Promise((resolve, reject) => {
+                const URL = "https://jsonplaceholder.typicode.com/" + resource + "/";
+                var jqxhr = $.getJSON(URL, function (data) {
+                    resolve(data);
+                }).done(function (data) {
+                    resolve(data);
+                }).fail(function (jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("Request Failed: " + err);
+                    reject(err);
+                });
+            });
+
+            promise.then(
+                function (data) {
+                    if (Array.isArray(data)) {
+                        console.log("data is array", JSON.stringify(data, null, 4));
+                    }
+                    addDataTable(data)
+                },
+                function (error) {
+                    errorMsg(error);
+                });
+
+        }
+
+        function addDataTable(data) {
+            $('#datatable').empty();
+            tableThs = Object.keys(data[0]);
+            console.log("head", Object.keys(data[0]));
+            $('<table class="table" id="table" data-height="460"><thead><tr><th data-field="' + tableThs[1] + '">' + tableThs[1] + '</th><th data-field="' + tableThs[2] + '">' + tableThs[2] + '</th><th data-field="' + tableThs[3] + '">' + tableThs[3] + '</th></tr></thead></table>').appendTo("#datatable");
+            $('#table').bootstrapTable({ data: data });
+        }
+
+        function errorMsg(data) {
+            $("#errmsg").html(error);
+            console.log(error);
+        }
+
+    </script>
+</body>
+
+</html>
