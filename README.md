@@ -1,7 +1,6 @@
-# Promise
-Simple Promise Example
+# Simple Promise Example
 
-function getJSON(resource) {
+    function getJSON(resource) {
             const promise = new Promise((resolve, reject) => {
                 const URL = "https://jsonplaceholder.typicode.com/" + resource + "/";
                 var jqxhr = $.getJSON(URL, function (data) {
@@ -22,4 +21,4 @@ function getJSON(resource) {
                 function (error) {
                     errorMsg(error);
             });
-}
+    }
